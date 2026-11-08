@@ -9,8 +9,6 @@ The personal profile website of Anwar Achilles — **Welcome**, **Profile** (bio
 
 ![The page on desktop](public/assets/snapshot.jpg)
 
-<p align="center"><img src="public/assets/snapshot-mobile.jpg" alt="The page on mobile" width="260"></p>
-
 ---
 
 ## Made with Rune
@@ -141,13 +139,6 @@ One password, for content management only — no username.
   php vercel password                                  # ADMIN_PASSWORD_HASH of .env -> Vercel (production)
   php vercel push
   ```
-* **Migration from `api/credentials.txt`** (the old place, same password):
-  ```bash
-  php cast password --migrate                          # the hash of api/credentials.txt -> .env
-  php vercel password
-  php vercel push
-  ```
-  Log in on the deploy; when it works, delete `api/credentials.txt`. Until then the API still reads the file when the env is missing.
 * The token is signed with HMAC-SHA256 by the env `APP_SECRET`, or by the hash itself — a new password ends every open session. It lives 2 hours (`TOKEN_LIFETIME` in `src/index.php`).
 * The session is kept in `sessionStorage`: closing the tab logs out.
 

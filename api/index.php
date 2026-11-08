@@ -321,15 +321,8 @@ class Exura {
 const TOKEN_LIFETIME = 7200;
 
 // the password_hash of the one password: the env ADMIN_PASSWORD_HASH (Vercel env, or .env locally)
-// [i]MIGRATION: api/credentials.txt is still read when the env is missing; delete the file once the env is set
 function credential() {
-  static $hash = null;
-  if ($hash === null) {
-    $hash = env('ADMIN_PASSWORD_HASH');
-    $file = __DIR__ . '/credentials.txt';
-    if ($hash === '' && is_file($file)) $hash = trim((string) file_get_contents($file));
-  }
-  return $hash;
+  return env('ADMIN_PASSWORD_HASH');
 }
 
 // the secret that signs every token: APP_SECRET (Vercel env), or the hash itself,

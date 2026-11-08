@@ -2,7 +2,7 @@
 <?php
 /*
  * Act. 2 - Understanding Its Flow
- * BUILD WEBSITE EXURA
+ * ANWAR ACHILLES PROFILE
  *
  * From the silence of nothingness, echoes rise from the void.
  * A journey begins — with runes at your side.
@@ -187,6 +187,7 @@ Chanter::cast(
     Keeper::shard([
       'src',
       'public/assets',
+      'public/favicon.ico',
       'exura',
       'vercel',
       'vercel.json',
@@ -206,11 +207,10 @@ Chanter::cast(
  * this writes it into .env (local, never committed); php vercel password sends it to Vercel
  * $ php cast password                    (asks twice)
  * $ php cast password --new=@Arc123
- * $ php cast password --migrate          (the hash of api/credentials.txt into .env, no new password)
  * [i]INFO: the hash also signs the tokens, so every open session ends
  * */
 Chanter::cast(
-  arg: 'password --new --migrate',
+  arg: 'password --new',
   echo: 'Set the login password (.env).',
   execute: function() {
     // write ADMIN_PASSWORD_HASH into .env: replace the line, or add it
@@ -223,19 +223,6 @@ Chanter::cast(
       Whisper::echo('{{color-success}}{{icon-success}}{{color-end}} ADMIN_PASSWORD_HASH saved to .env{{nl}}');
       Whisper::echo('{{color-secondary}}{{icon-info}}{{color-end}} Send it to Vercel: php vercel password, then php vercel push{{nl}}');
     };
-
-    // --migrate: the old file becomes the env, the password stays the same
-    if (Chanter::spell('migrate') !== false) {
-      $old = __DIR__ . '/api/credentials.txt';
-      $hash = is_file($old) ? trim((string) file_get_contents($old)) : '';
-      if (!str_starts_with($hash, '$')) {
-        Whisper::echo('{{color-danger}}{{icon-danger}}{{color-end}} No hash in api/credentials.txt, use: php cast password{{nl}}');
-        return;
-      }
-      $save($hash);
-      Whisper::echo('{{color-secondary}}{{icon-info}}{{color-end}} Once Vercel has it and the login works, delete api/credentials.txt{{nl}}');
-      return;
-    }
 
     $password = Chanter::spell('new');
 
