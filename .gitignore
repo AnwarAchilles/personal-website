@@ -1,0 +1,9 @@
+# rune (sentinel)
+vendor/
+.echoes/
+src/
+# /rune
+.vercel
+.env
+.env.local
+.env.password

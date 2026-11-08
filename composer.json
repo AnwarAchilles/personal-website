@@ -1,0 +1,5 @@
+{
+    "require": {
+        "devneet/rune": "^1.20"
+    }
+}

@@ -1,0 +1,23 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "ayano.moc3",
+		"Textures": [
+			"ayano.2048/texture_00.png"
+		],
+		"Physics": "ayano.physics3.json",
+		"DisplayInfo": "ayano.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [ "ParamEyeLOpen", "ParamEyeROpen" ]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [ "ParamMouthOpenY" ]
+		}
+	]
+}

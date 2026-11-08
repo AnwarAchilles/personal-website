@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /works/
+Allow: /
+
+Sitemap: https://anwarachilles.online/sitemap.xml

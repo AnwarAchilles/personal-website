@@ -1,0 +1,268 @@
+#!/usr/bin/env php
+<?php
+/*
+ * Act. 2 - Understanding Its Flow
+ * ANWAR ACHILLES PROFILE
+ *
+ * From the silence of nothingness, echoes rise from the void.
+ * A journey begins — with runes at your side.
+ *
+ * Run this script using:
+ *   $ php cast
+ *   $ php cast grimoire
+ */
+require_once __DIR__ . '/vendor/autoload.php';
+
+
+
+/**
+ * I N V O C A T I O N
+ *
+ * Step 1 — Summon the runes:
+ * Import each module's manifest.
+ *
+ * Step 2 — Channel the energy:
+ * Initialize ether, essence, and entity.
+ *
+ * Note: Keep #sentinel markers if you're using Sentinel support.
+ */
+use Rune\Aether\Manifest as Aether;
+use Rune\Chanter\Manifest as Chanter;
+use Rune\Weaver\Manifest as Weaver;
+use Rune\Whisper\Manifest as Whisper;
+use Rune\Forger\Manifest as Forger;
+use Rune\Cipher\Manifest as Cipher;
+use Rune\Keeper\Manifest as Keeper;
+use Rune\Crafter\Manifest as Crafter;
+use Rune\Specter\Manifest as Specter;
+#sentinel-manifest
+
+Aether::ether()::essence()::entity();
+Chanter::ether()::essence()::entity();
+Weaver::ether()::essence()::entity();
+Whisper::ether()::essence()::entity();
+Forger::ether()::essence()::entity();
+Cipher::ether()::essence()::entity();
+Keeper::ether()::essence()::entity();
+Crafter::ether()::essence()::entity();
+Specter::ether()::essence()::entity();
+#sentinel-awaken
+
+
+
+/**
+ * I N C A N T A T I O N
+ *
+ * This is your working space.
+ * Use begin() and end() to define the active logic scope.
+ *
+ * The website lives in src/, one file per language:
+ *   src/index.head.html   goes into <head>
+ *   src/index.html        goes into <body>
+ *   src/index.css         becomes <style>
+ *   src/index.js          becomes <script>
+ *   src/index.php         runs on top, before the page
+ * Crafter bundles them into one file: dist/index.php
+ * Assets (images, fonts) live in dist/assets/
+ *
+ * Exura is fetched by the other runite of this folder:
+ *   $ php exura setup     -> dist/exura/ (linked by the page)
+ * Set it to src/exura/ and build bundles Exura into dist/index.php too.
+ */
+Aether::begin();
+Chanter::begin();
+Keeper::begin();
+
+
+/* I · BUILD
+ * bundle src/ into dist/index.php with Crafter
+ * $ php cast build
+ * */
+Chanter::cast(
+  arg: 'build',
+  echo: 'Bundle src/ into public/index.php.',
+  execute: function() {
+    // describe the item: seeds are the recipe, shards are the sources
+    Crafter::item('frontend', function() {
+      Crafter::seed('DIST', __DIR__ . '/public/index.html');      // the output file
+      Crafter::seed('TYPE', 'plain');                          // plain, function or class
+      Crafter::seed('LANGUAGE', ['html', 'css', 'js']); // must match a template, in this order
+
+      // Exura in src/exura/ is bundled first (php exura setup --dist=src/exura/)
+      if (is_dir(__DIR__ . '/src/exura')) {
+        Forger::scan(__DIR__ . '/src/exura', function($item) {
+          Crafter::shard($item->target);
+        });
+      }
+
+      Crafter::shard(__DIR__ . '/src/index.head.html');
+      Crafter::shard(__DIR__ . '/src/index.html');
+      Crafter::shard(__DIR__ . '/src/index.css');
+      Crafter::shard(__DIR__ . '/src/index.js');
+    });
+
+    // describe the backend item: seeds are the recipe, shards are the sources
+    Crafter::item('backend', function() {
+      Crafter::seed('DIST', __DIR__ . '/api/index.php');
+      Crafter::seed('TYPE', 'plain');
+      Crafter::seed('LANGUAGE', ['php']);
+
+      Crafter::shard(__DIR__ . '/src/exura/exura.php');
+      Crafter::shard(__DIR__ . '/src/index.php');
+    });
+
+    // spark: many files become one
+    Crafter::spark('frontend');
+    Crafter::spark('backend');
+
+    // store the shards while building.
+    Chanter::cast('store')();
+  }
+);
+
+
+/* II · SERVE
+ * a local server that answers like Vercel, until Ctrl+C
+ * $ php cast serve   ->   http://127.0.0.1:8000   (and /api/* runs api/index.php)
+ * [i]INFO: router.php reads the routes of vercel.json on every request
+ * */
+Chanter::cast(
+  arg: 'serve',
+  echo: 'Serve like Vercel on 127.0.0.1:8000.',
+  execute: function() {
+    Specter::devserver([
+      'path'=> __DIR__,
+      'file'=> __DIR__ . '/router.php',
+    ]);
+  }
+);
+
+
+/* III · WATCH
+ * rebuild whenever a file in src/ changes, until Ctrl+C
+ * $ php cast watch
+ * */
+Chanter::cast(
+  arg: 'watch',
+  echo: 'Rebuild when src/ changes.',
+  execute: function() {
+    Specter::observer(__DIR__ . '/src', function() {
+      Chanter::cast('build')();
+    });
+  }
+);
+
+
+/* IV · START
+ * build once, then serve and watch, each in its own window
+ * $ php cast start
+ * */
+Chanter::cast(
+  arg: 'start',
+  echo: 'Build, then serve and watch.',
+  execute: function() {
+    Chanter::cast('build')();
+
+    // Specter casts beside this flow, it does not wait
+    Specter::cast('{{self}} serve', [
+      'exit'=> true,
+      'title'=> 'RUNE:: Local Development Server',
+    ]);
+    Specter::cast('{{self}} watch', [
+      'exit'=> true,
+      'title'=> 'RUNE:: Observer Directories',
+    ]);
+  }
+);
+
+
+/* V · STORE
+ * keep the files that travel with the relic (cast.rune)
+ * $ php cast store
+ * */
+Chanter::cast(
+  arg: 'store',
+  echo: 'Keep the assets as shards.',
+  execute: function() {
+    Keeper::shard([
+      'src',
+      'public/assets',
+      'public/favicon.ico',
+      'exura',
+      'vercel',
+      'vercel.json',
+      'router.php',
+      '.gitignore',
+      '.vercelignore',
+      'README.md',
+    ]);
+    Whisper::echo('{{color-success}}{{icon-success}} Stored to shards{{nl}}');
+  }
+);
+
+
+
+/* VI · PASSWORD
+ * the one password of the login, kept as a password_hash in the env ADMIN_PASSWORD_HASH:
+ * this writes it into .env (local, never committed); php vercel password sends it to Vercel
+ * $ php cast password                    (asks twice)
+ * $ php cast password --new=@Arc123
+ * $ php cast password --migrate          (the hash of api/credentials.txt into .env, no new password)
+ * [i]INFO: the hash also signs the tokens, so every open session ends
+ * */
+Chanter::cast(
+  arg: 'password --new --migrate',
+  echo: 'Set the login password (.env).',
+  execute: function() {
+    // write ADMIN_PASSWORD_HASH into .env: replace the line, or add it
+    $save = function( string $hash ) {
+      $file = __DIR__ . '/.env';
+      $lines = is_file($file) ? preg_split('/\r?\n/', rtrim((string) file_get_contents($file))) : [];
+      $lines = array_values(array_filter($lines, fn($line) => !preg_match('/^\s*ADMIN_PASSWORD_HASH\s*=/', $line)));
+      $lines[] = "ADMIN_PASSWORD_HASH='$hash'";
+      Forger::item($file, implode(PHP_EOL, array_filter($lines, fn($line) => $line !== '')) . PHP_EOL);
+      Whisper::echo('{{color-success}}{{icon-success}}{{color-end}} ADMIN_PASSWORD_HASH saved to .env{{nl}}');
+      Whisper::echo('{{color-secondary}}{{icon-info}}{{color-end}} Send it to Vercel: php vercel password, then php vercel push{{nl}}');
+    };
+
+    // --migrate: the old file becomes the env, the password stays the same
+    if (Chanter::spell('migrate') !== false) {
+      $old = __DIR__ . '/api/credentials.txt';
+      $hash = is_file($old) ? trim((string) file_get_contents($old)) : '';
+      if (!str_starts_with($hash, '$')) {
+        Whisper::echo('{{color-danger}}{{icon-danger}}{{color-end}} No hash in api/credentials.txt, use: php cast password{{nl}}');
+        return;
+      }
+      $save($hash);
+      Whisper::echo('{{color-secondary}}{{icon-info}}{{color-end}} Once Vercel has it and the login works, delete api/credentials.txt{{nl}}');
+      return;
+    }
+
+    $password = Chanter::spell('new');
+
+    // no --new: ask, twice
+    if ($password === false || $password === '' || $password === '1') {
+      $password = Whisper::call('New password: ');
+      if (Whisper::call('Repeat it: ') !== $password) {
+        Whisper::echo('{{color-danger}}{{icon-danger}}{{color-end}} The two passwords differ, nothing changed{{nl}}');
+        return;
+      }
+    }
+
+    if (strlen((string) $password) < 6) {
+      Whisper::echo('{{color-danger}}{{icon-danger}}{{color-end}} Use at least 6 characters, nothing changed{{nl}}');
+      return;
+    }
+
+    $save(password_hash((string) $password, PASSWORD_DEFAULT));
+    Whisper::echo('{{color-secondary}}{{icon-info}}{{color-end}} Open sessions end, log in again{{nl}}');
+  }
+);
+
+// A website is many files,
+// Rune makes it one, Exura gives it shape.
+
+#sentinel-codex
+Chanter::end();
+Keeper::end();
+Aether::end();

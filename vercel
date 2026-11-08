@@ -1,0 +1,155 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Act. 0 - The Awakening of Void
+ * THE AWAKENING ✦
+ * 
+ * From the silence of nothingness, echoes rise from the void.
+ * A journey begins — with runes at your side.
+ * 
+ * Run this script using:
+ *   $ php vercel
+ *   $ php vercel grimoire
+ */
+require_once __DIR__ . '/vendor/autoload.php';
+
+
+
+/**
+ * I N V O C A T I O N
+ * 
+ * Step 1 — Summon the runes:  
+ * Import each module's manifest.
+ * 
+ * Step 2 — Channel the energy:  
+ * Initialize ether, essence, and entity.
+ * 
+ * Note: Keep #sentinel markers if you're using Sentinel support.
+ */
+use Rune\Aether\Manifest as Aether;
+use Rune\Whisper\Manifest as Whisper;
+use Rune\Weaver\Manifest as Weaver;
+use Rune\Chanter\Manifest as Chanter;
+use Rune\Forger\Manifest as Forger;
+use Rune\Keeper\Manifest as Keeper;
+use Rune\Specter\Manifest as Specter;
+#sentinel-manifest
+
+Aether::ether()::essence()::entity();
+Whisper::ether()::essence()::entity();
+Weaver::ether()::essence()::entity();
+Chanter::ether()::essence()::entity();
+Forger::ether()::essence()::entity();
+Keeper::ether()::essence()::entity();
+Specter::ether()::essence()::entity();
+#sentinel-awaken
+
+
+
+/**
+ * I N C A N T A T I O N
+ * 
+ * This is your working space.  
+ * Use begin() and end() to define the active logic scope.
+ */
+Aether::begin();
+Chanter::begin();
+Keeper::begin();
+
+Chanter::cast(
+  arg: 'link',
+  echo: 'Login to Vercel.',
+  execute: function() {
+    // specter handler
+    Specter::cast('vercel login', [
+      'exit' => true,
+      'title' => 'RUNE:: Vercel Login',
+      'blocking' => false
+    ]);
+    // alert
+    Whisper::echo("{{text-success}}{{icon-success}}{{end}} Successfully login to vercel \n");
+    Whisper::echo("{{text-info}}{{icon-info}}{{end}}{{text-secondary}} Checkout https://vercel.com \n");
+  }
+);
+
+Chanter::cast(
+  arg: 'push',
+  echo: 'Publish to vercel',
+  execute: function() {
+    // specter handler
+    Specter::cast('vercel --prod', [
+      'exit' => true,
+      'title' => 'RUNE:: Vercel Push',
+      'blocking' => false
+    ]);
+    // alert
+    Whisper::echo("{{text-success}}{{icon-success}}{{end}} Successfully push to vercel \n");
+    Whisper::echo("{{text-info}}{{icon-info}}{{end}}{{text-secondary}} Checkout https://vercel.com \n");
+  }
+);
+
+Chanter::cast(
+  arg: 'data',
+  echo: 'Connect to serverless database (NeonDB).',
+  execute: function() {
+    // specter handler
+    Specter::cast('vercel env add DATABASE_URL production', [
+      'exit' => true,
+      'title' => 'RUNE:: Vercel NeonDB',
+      'blocking' => false
+    ]);
+    // alert
+    Whisper::echo("{{text-success}}{{icon-success}}{{end}} Successfully connect to serverless database (NeonDB) \n");
+    Whisper::echo("{{text-info}}{{icon-info}}{{end}}{{text-secondary}} Checkout https://vercel.com \n");
+  }
+);
+
+Chanter::cast(
+  arg: 'env',
+  echo: 'Pull the env of Vercel into .env (local).',
+  execute: function() {
+    // DATABASE_URL was added to production (php vercel data): pull that one, the API reads .env locally
+    Specter::cast('vercel env pull .env --environment=production --yes', [
+      'exit' => true,
+      'title' => 'RUNE:: Vercel Env',
+      'blocking' => false
+    ]);
+    Whisper::echo("{{color-success}}{{icon-success}}{{color-end}} The env of Vercel goes into .env, never commit it{{nl}}");
+  }
+);
+
+Chanter::cast(
+  arg: 'password',
+  echo: 'Send ADMIN_PASSWORD_HASH of .env to Vercel (production).',
+  execute: function() {
+    // the hash comes from .env (php cast password), never from the command line
+    $env = is_file(__DIR__ . '/.env') ? (string) file_get_contents(__DIR__ . '/.env') : '';
+    if (!preg_match('/^\s*ADMIN_PASSWORD_HASH\s*=\s*[\'"]?([^\'"\r\n]+)/m', $env, $match)) {
+      Whisper::echo("{{color-danger}}{{icon-danger}}{{color-end}} No ADMIN_PASSWORD_HASH in .env, run: php cast password{{nl}}");
+      return;
+    }
+
+    // a value through stdin keeps the $ of the hash safe from the shell; the file lives a moment only
+    $temp = __DIR__ . '/.env.password';
+    file_put_contents($temp, trim($match[1]));
+    Specter::cast('vercel env rm ADMIN_PASSWORD_HASH production --yes', [
+      'exit' => true,
+      'blocking' => true,
+      'visible' => false
+    ]);
+    Specter::cast('vercel env add ADMIN_PASSWORD_HASH production < .env.password', [
+      'exit' => true,
+      'blocking' => true,
+      'visible' => false
+    ]);
+    unlink($temp);
+
+    Whisper::echo("{{color-success}}{{icon-success}}{{color-end}} ADMIN_PASSWORD_HASH sent to Vercel (production){{nl}}");
+    Whisper::echo("{{color-secondary}}{{icon-info}}{{color-end}} Check it: vercel env ls production, then: php vercel push{{nl}}");
+  }
+);
+
+#sentinel-codex
+Chanter::end();
+Aether::end();
+Keeper::end();
