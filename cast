@@ -2,7 +2,7 @@
 <?php
 /*
  * Act. 2 - Understanding Its Flow
- * ANWAR ACHILLES PROFILE
+ * BUILD WEBSITE EXURA
  *
  * From the silence of nothingness, echoes rise from the void.
  * A journey begins — with runes at your side.
@@ -187,7 +187,6 @@ Chanter::cast(
     Keeper::shard([
       'src',
       'public/assets',
-      'public/favicon.ico',
       'exura',
       'vercel',
       'vercel.json',

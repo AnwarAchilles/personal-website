@@ -9,6 +9,8 @@ The personal profile website of Anwar Achilles — **Welcome**, **Profile** (bio
 
 ![The page on desktop](public/assets/snapshot.jpg)
 
+<p align="center"><img src="public/assets/snapshot-mobile.jpg" alt="The page on mobile" width="260"></p>
+
 ---
 
 ## Made with Rune
